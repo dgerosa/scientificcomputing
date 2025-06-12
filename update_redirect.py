@@ -2,7 +2,7 @@ import requests
 
 username = "dgerosa"
 prefix = "astrostatistics_bicocca_"
-current_year = 2020   # starting point, can be current or last known year
+current_year = 2024   # starting point, can be current or last known year
 max_year = 2100       # safety max to avoid infinite loops
 
 def find_latest_year(prefix, current_year, max_year, username):
