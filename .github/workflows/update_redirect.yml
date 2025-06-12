@@ -48,7 +48,6 @@ jobs:
             gh issue create \
               --title "Redirects updated" \
               --body "The file \`index.html\` was updated in [this commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})." \
-              --label automation
           else
             gh issue comment "$ISSUE" \
               --body "The file \`index.html\` was updated again in [this commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})."
