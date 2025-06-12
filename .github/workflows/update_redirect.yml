@@ -1,0 +1,48 @@
+name: Update Redirect
+
+on:
+  schedule:
+    - cron: '0 0 * * *'   # runs daily at midnight UTC
+  workflow_dispatch:      # allow manual trigger
+
+jobs:
+  update-redirect:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Install requests
+        run: pip install requests
+
+      - name: Run update_redirect.py
+        run: python update_redirect.py
+
+      - name: Check for changes
+        id: git_diff
+        run: |
+          echo "::set-output name=changed::$(git status --porcelain | grep index.html || echo '')"
+
+      - name: Commit and push if changed
+        if: steps.git_diff.outputs.changed != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Update redirect target (auto)"
+          git push
+
+      - name: Create GitHub Issue on redirect change
+        if: steps.git_diff.outputs.changed != ''
+        uses: peter-evans/create-issue-from-file@v6
+        with:
+          title: Redirect target updated by GitHub Action
+          content: |
+            The redirect page was updated automatically by the workflow.
+            Please verify the new redirect target.
