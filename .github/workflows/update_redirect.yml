@@ -40,9 +40,6 @@ jobs:
           git commit -m "Update redirect target (auto)"
           git push
 
-      - name: Set up GitHub CLI
-        uses: cli/cli-action@v2
-
       - name: Create or update notification issue
         if: steps.check_diff.outputs.changed == 'true'
         run: |
